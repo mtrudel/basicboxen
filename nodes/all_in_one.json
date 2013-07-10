@@ -1,0 +1,28 @@
+{
+  "run_list": [
+    "role[baseline]",
+    "role[proxy]",
+    "role[ruby_app]",
+    "role[postgres]"
+  ],
+
+  "postfix": {
+    "aliases": {
+      "root": "you@example.com"
+    }
+  },
+
+  "users": [
+    { "username": "deploy",
+      "comment": "Deploy user",
+      "ssh_keys": ["ssh-dss AABBCCDDEEFF.....AABBCCDDEEFF optionalemail@example.com"]
+    }
+  ],
+
+  "authorization": {
+    "sudo": {
+      "users": ["deploy"],
+      "passwordless": "true"
+    }
+  }
+}
