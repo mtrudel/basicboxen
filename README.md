@@ -115,7 +115,24 @@ production config on the same tooling when the time comes.
 
 # Basic Boxen's Opinions
 
-TBD
+Basic boxen derives its simplicity by doing some things well at the expense of 
+others. As such it's inherently an opinionated piece of software, and understanding
+those opinions goes a long way to getting it to work well for you:
+
+Frequently Asked Questions:
+
+* **What about [Vagrant](http://www.vagrantup.com/)?** There's no vagrant in here, since my 
+  mental model of devops separates spinning up a box from provisioning a box (and also 
+  because I am yet to be convinced that Vagrant isn't more trouble than it's worth). Feel
+  free to wire in vagrant if you'd like though -- since basic boxen is built on standard
+  Chef recipes, it shouldn't be too hard.
+
+* **How do I daemonize apps?** As per the accompanying **capistrano-basicboxen** project, my
+  preferred way to daemonize apps is to use [Foreman](https://github.com/ddollar/foreman)'s 
+  mostly excellent upstart / inittab export option, and let the system handle daemonizing (since
+  it's already doing it for daemons much more central to a running server than my piddling web
+  app. This also has the upside of transparently supporting any background daemons that are in 
+  your `Procfile`.
 
 # Credits
 
