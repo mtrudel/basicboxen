@@ -122,7 +122,7 @@ TBD
 Credit where credit is due:
 
 * Thanks to [Chef](http://www.opscode.com/chef/) and [knife-solo](http://matschaffer.github.io/knife-solo/) for making this all possible
-* Thanks to [Grant McInnes](https://github.com/gmcinnes) for a lot of guidance
+* Thanks to [Grant McInnes](https://github.com/gmcinnes) and [Crent](https://github.com/bjubinville) for a lot of guidance
   and source material
 
 # Contributing
