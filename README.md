@@ -21,6 +21,7 @@ gems and cookbooks installed on your local machine:
     git clone git@github.com:mtrudel/basicboxen.git
     cd basicboxen
     bundle install
+    bundle exec knife solo init .
     bundle exec berks install
 
 Next you'll want to edit (and probably commit) the `nodes/all_in_one.json` file
