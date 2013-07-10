@@ -12,7 +12,7 @@ minimal hassle.
 
 # Getting started
 
-## Adding in your info
+## Installing basic boxen on your local machine
 
 Before you can use basic boxen, you have to tell it a little bit about yourself. To do
 this, first clone this repo to your local machine and make sure you have all the local
@@ -35,10 +35,34 @@ That's it! You're now ready to start making servers.
 
 ## Making a box
 
-Now that you've made basic boxen your own, you can build any number of boxes from this 
+Now that you've made basic boxen your own, you can provision any number of boxes from this 
 recipe by running:
 
     bundle exec knife solo bootstrap root@host nodes/all_in_one.json
+
+In theory basic boxen can provision any remote box, even ones with packages already 
+installed and running. In practice however, it makes more sense to run basic boxen against 
+a newly installed remote machine. Ideally, basic boxen will be the first thing that's ever 
+run on the machine. Most VM containers will automatically install sshd, provide you initial
+login credentials, and set the hostname, so basic boxen takes those steps as a given.
+
+### How I use basic boxen
+
+For reference, my personal workflow with basic boxen is this:
+
+1. Spin up a new [DigitalOcean](https://www.digitalocean.com/?refcode=4bae360cbe43) VM (most
+   of my projects fit into their smallest tier, at least in development). I use their Ubuntu 
+   12.04 LTS 64 bit image, and specify my public key as initial auth.
+2. From inside my personal fork of basic boxen, I run the exact steps 
+   I outlined in the Getting Started section above. My personal fork is unchaged from this one, 
+   with the exception of my having customized my credentials as specified above.
+3. I then switch over to the app I wish to deploy, set up and configure **capistrano-basicboxen** 
+   in the project, and I'm off to the races.
+
+In most cases, I can go from freshly spun up box to running application in less than 5 minutes, 
+without ever having to manually ssh into the server. Nice.
+
+### Running basic boxen on an already provisioned box
 
 Note that you only run as the remote root user the first time you run on the
 remote server. Since the initial run of chef will create a deploy user, set them up
