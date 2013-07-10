@@ -113,13 +113,7 @@ You can have a box up and running in a few minutes with basic boxen without
 knowing anything about chef, and spend the time to grow out a more mature
 production config on the same tooling when the time comes.
 
-# Basic Boxen's Opinions
-
-Basic boxen derives its simplicity by doing some things well at the expense of 
-others. As such it's inherently an opinionated piece of software, and understanding
-those opinions goes a long way to getting it to work well for you:
-
-Frequently Asked Questions:
+# Frequently Asked Questions:
 
 * **What about [Vagrant](http://www.vagrantup.com/)?** There's no vagrant in here, since my 
   mental model of devops separates spinning up a box from provisioning a box (and also 
