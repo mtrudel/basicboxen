@@ -27,9 +27,9 @@ gems and cookbooks installed on your local machine:
 Next you'll want to edit (and probably commit) the `nodes/all_in_one.json` file
 and make the following changes:
 
-* Change the address that root's email is forwarded to on line 11
-* Add your ssh public key (ie: the contents of your `~/.ssh/id_[dr]sa.pub` file)
-  into the `ssh_keys` array on line 18
+* **Line 11**: Specify the address that root's email is forwarded to
+* **Line 18**: Add your ssh public key (ie: the contents of your `~/.ssh/id_[dr]sa.pub` file)
+  into the `ssh_keys` array
 
 That's it! You're now ready to start making servers.
 
