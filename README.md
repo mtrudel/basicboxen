@@ -5,18 +5,18 @@ I wrote basic boxen to give me a consistent baseline environment to deploy apps
 flexible enough to handle whatever apps I could throw at it. Basic boxen does just
 that -- it's an opinionated set of chef cookbooks and default configs that gives
 you a great development environment, while laying the groundwork for
-sustainable growth into production. Using basic boxen in tandem with my
-**capistrano-basicboxen** gem (to be released in the next couple of days) provides
-a wonderful and simple way to deploy and run a standard `Procfile` based app with
-minimal hassle.
+sustainable growth into production. Using basic boxen in tandem with a simple
+[Capistrano](http://capify.org) based deployment (such as the
+examples provided herein) in your apps provides a wonderful and simple way to go
+from zero to running application with minimal hassle and no lock-in.
 
 # Getting started
 
 ## Installing basic boxen on your local machine
 
-Before you can use basic boxen, you have to tell it a little bit about yourself. To do
-this, first clone this repo to your local machine and make sure you have all the local
-gems and cookbooks installed on your local machine:
+Before you can use basic boxen to build boxes, you have to tell it a little bit
+about yourself. To do this, first clone this repo to your local machine and make
+sure you have all the local gems and cookbooks installed:
 
     git clone git@github.com:mtrudel/basicboxen.git
     cd basicboxen
@@ -38,45 +38,32 @@ That's it! You're now ready to start making servers.
 Now that you've made basic boxen your own, you can provision any number of boxes from this 
 recipe by running:
 
-    bundle exec knife solo bootstrap root@host nodes/all_in_one.json
+    bundle exec knife solo bootstrap user@host nodes/all_in_one.json
 
 In theory basic boxen can provision any remote box, even ones with packages already 
 installed and running. In practice however, it makes more sense to run basic boxen against 
 a newly installed remote machine. Ideally, basic boxen will be the first thing that's ever 
 run on the machine. Most VM containers will automatically install sshd, provide you initial
-login credentials, and set the hostname, so basic boxen takes those steps as a given.
+login credentials, and set the hostname, so basic boxen takes those steps as
+a given (note that you'll want to substitute the name of this initial user in
+place of 'user' above)
 
-### How I use basic boxen
+#### Sidenote: Running basic boxen on an already provisioned box
 
-For reference, my personal workflow with basic boxen is this:
-
-1. Spin up a new [DigitalOcean](https://www.digitalocean.com/?refcode=4bae360cbe43) VM (most
-   of my projects fit into their smallest tier, at least in development). I use their Ubuntu 
-   12.04 LTS 64 bit image, and specify my public key as initial auth.
-2. From inside my personal fork of basic boxen, I run the exact steps 
-   I outlined in the Getting Started section above. My personal fork is unchaged from this one, 
-   with the exception of my having customized my credentials as specified above.
-3. I then switch over to the app I wish to deploy, set up and configure **capistrano-basicboxen** 
-   in the project, and I'm off to the races.
-
-In most cases, I can go from freshly spun up box to running application in less than 5 minutes, 
-without ever having to manually ssh into the server. Nice.
-
-### Running basic boxen on an already provisioned box
-
-Note that you only run as the remote root user the first time you run on the
-remote server. Since the initial run of chef will create a deploy user, set them up
-with passwordless sudo, and revoke root login via ssh, subsequent runs thus must
-be done like:
+Note that you only log in as your system's initial user the first time you run on the
+remote server. The initial run of chef will create a `deploy` user, set them up
+with passwordless sudo, and revoke root login via ssh, giving you a consistent
+environment with the `deploy` user as the standard method of login. Because of
+this, subsequent runs of knife should look like:
 
     bundle exec knife solo bootstrap deploy@host nodes/all_in_one.json
 
 Unless you're making changes to your basic boxen fork, you shouldn't ever need
 to run your configuration more than once (though it's totally safe to).
 
-# What this gets you
+### What this gets you
 
-When this build completes, your remote machine will have the following:
+Out of the box, basic boxen sets up your remote server to have:
 
 * A running nginx instance with no hosts defined (and thus not bound anywhere)
 * A domain socket only postgres server running, with 'peer' authentication
@@ -91,10 +78,10 @@ This basic deployment has only SSH and NTP open to the world, and has a very
 small attack surface exposed on SSH (all access is public key only, and root
 login is disabled). Everything from here onwards is considered to be
 a deployment concern, and can be well handled within your deployment tool of
-choice (I would suggest my **capistrano-basicboxen** gem to do this, as it's
-designed specifically to deploy generic `Procfile` apps to basic boxen boxes).
+choice (see below for a discussion of best practices with Capistrano based
+deployment to a basic boxen).
 
-# What does this *not* get you (yet)
+### What does this *not* get you (yet)
 
 This box is missing a few key pieces for production use. Most notably it does
 not have:
@@ -113,20 +100,121 @@ You can have a box up and running in a few minutes with basic boxen without
 knowing anything about chef, and spend the time to grow out a more mature
 production config on the same tooling when the time comes.
 
+### How I use basic boxen
+
+For reference, my personal workflow with basic boxen is this:
+
+1. Spin up a new [DigitalOcean](https://www.digitalocean.com/?refcode=4bae360cbe43) VM (most
+   of my projects fit into their smallest tier, at least in development). I use their Ubuntu 
+   12.04 LTS 64 bit image, and specify my public key as initial auth.
+2. From inside my personal fork of basic boxen, I run the exact steps 
+   I outlined in the Getting Started section above. My personal fork is unchaged from this one, 
+   with the exception of my having customized my credentials as specified above.
+3. I then switch over to the app I wish to deploy, set up and configure
+   Capistrano as described in the next section, and I'm off to the races.
+
+In most cases, I can go from freshly spun up box to running application in less than 5 minutes, 
+without ever having to manually ssh into the server. Nice.
+
+# Deploying apps on a basic boxen
+
+Basic boxen only lays the groundwork for deploying one or more applications to
+a server, it doesn't actually deploy an application itself.  Deploying an app is
+a task best left to a deployment tool such as [Capistrano](http://capify.org).
+Basic boxen enables this by providing a consistent and straightforward
+environment that your deployment recipes can rely on in order to focus on the
+specific deployment needs of your particular app.
+
+Within the `examples/` directory of this project, you'll find examples of how to
+best use Capistrano to deploy several types of applications. It's important to
+note that you're able to use any tool you'd like to deploy; Capistrano is only used
+an example here. 
+
+## Opinionated deploys
+
+Although you're free to use any tool you'd like to deploy your apps
+to a basic boxen, it's best to keep in mind basic boxen's opinionated approach to
+responsiblities:
+
+* There are three stages to building a running server:
+  * getting a barebones server running (this is your VM provider / hardware team / cloud service's job)
+  * *provisioning* a server (this is basic boxen's job)
+  * *deploying* apps (this is your deployment tool's job)
+* Well defined interfaces between these stages is what makes dev-ops easy. In
+  particular, the relationship between provisioning and deployment should be
+  modelled on the concept of [policy and
+  mechanism](http://en.wikipedia.org/wiki/Separation_of_mechanism_and_policy)
+* Anything that exists across applications, or that could reasonably be
+  assumed to exist by an app's deployment tool, is a provisioning concern and
+  thus within the purview of basic boxen. This includes things such as:
+  * Generically configured daemons such as a frontend (ie: nginx) server, and
+    a database server
+  * Well defined and encapsulated mechanisms for apps to configure specific
+    customizations of these daemons
+  * A well defined mechanism for apps to daemonize themselves as needed (ie: upstart,
+    inittab)
+  * A reliable application environment (ie: a current ruby)
+  * System level concerns such as ssh access, outgoing mail servers, and time
+    servers
+* Anything that is specific to a particular app (ie: that would not exist on the
+  server were it not for that app) is a deployment concern of that app. This
+  includes things such as:
+  * The code and data for the app itself
+  * Database accounts for the app
+  * Frontend server (ie: nginx) configs that are particular to the app
+  * Daemonizing any components of the app which require it
+  * System-level configuration that is specific to the app (ie: logrotate config
+    files)
+* Apps should be mindful of the possibility of being run in a multi-tenant
+  environment. That is, they should not make assumptions about 'owning' the box
+  they're deployed to by doing things like setting the global hostname, taking
+  over the global nginx config, etc.
+
+# Growing beyond basic boxen
+
+The whole point of basic boxen is that it lets you lean on sensible defaults and
+best practices initially, while allowing you to take the reins and starting
+customizing at any time. If (and when) the time comes for you to do this, the
+following is a rough guide to making the transition:
+
+1. If you haven't already, fork your own copy of the basicboxen repo, as
+   described above.
+2. Create customized entries in the `nodes/` directory, naming them after
+   specific hostname(s) in your production environment. 
+
+At this point, you will have something resembling a standard Chef repository,
+now in a standalone format ready for your tweaking. Any of the various and
+plentiful online guides to using Chef can now be applied directly against your
+repository. A couple of things to be aware of:
+
+* Since basic boxen is biased towards provisioning a single standalone server,
+  it hollows out Postgresql's `pg_hba.conf` file in a way that may be surprising
+  to many Postgresql users. See the bottom of basicboxen's
+  [postgres](https://github.com/mtrudel/basicboxen/blob/master/roles/postgres.rb)
+  role for more information
+* Best practices really involve storing variable information in data bags as
+  opposed to within a node's config. I've elected to keep things slightly
+  non-standard in this regard to make it easier to get up and running with basic
+  boxen, but moving more towards data bags is something you'll probably want to
+  do (especially if you end up moving to Chef server)
+
 # Frequently Asked Questions:
 
-* **What about [Vagrant](http://www.vagrantup.com/)?** There's no vagrant in here, since my 
-  mental model of devops separates spinning up a box from provisioning a box (and also 
-  because I am yet to be convinced that Vagrant isn't more trouble than it's worth). Feel
-  free to wire in vagrant if you'd like though -- since basic boxen is built on standard
-  Chef recipes, it shouldn't be too hard.
+* **What about [Vagrant](http://www.vagrantup.com/)?** I personally don't use
+  Vagrant, since my mental model of devops separates spinning up a box from
+  provisioning a box (and also because I am yet to be convinced that Vagrant
+  isn't more trouble than it's worth). Feel free to wire in Vagrant if you'd
+  like though -- since basic boxen is built on standard Chef recipes, it
+  shouldn't be too hard.
 
-* **How do I daemonize apps?** As per the accompanying **capistrano-basicboxen** project, my
-  preferred way to daemonize apps is to use [Foreman](https://github.com/ddollar/foreman)'s 
-  mostly excellent upstart / inittab export option, and let the system handle daemonizing (since
-  it's already doing it for daemons much more central to a running server than my piddling web
-  app. This also has the upside of transparently supporting any background daemons that are in 
-  your `Procfile`.
+* **How do I daemonize apps?** As per the Capistrano recipes discussed in the
+  previous section, my preferred way to daemonize apps is to use
+  [Foreman](https://github.com/ddollar/foreman)'s mostly excellent upstart
+  / inittab export option, and let the system handle daemonizing using its built
+  in mechanism (upstart on Ubuntu, inittab on most other distros). This also has
+  the upside of transparently supporting any background daemons that are in your
+  `Procfile`. Note that the example Capistrano recipes in this project assume an
+  upstart (ie: Ubuntu) based server.
 
 # Credits
 
