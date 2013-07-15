@@ -1,0 +1,31 @@
+server {
+  server_name <%= server_name %>;
+  listen 80 default;
+
+  root <%= current_path %>/public;
+  try_files $uri @<%= application %>_app;
+
+  location @<%= application %>_app {
+    proxy_pass         http://unix:<%= unicorn_socket %>;
+
+    proxy_buffering     on;
+    proxy_redirect      off;
+    proxy_set_header    Host                  $host;
+    proxy_set_header    X-Real-IP             $remote_addr;
+    proxy_set_header    X-Forwarded-For       $proxy_add_x_forwarded_for;
+  }
+
+  location ~* ^/assets/ {
+    # Per RFC2616 - 1 year maximum expiry
+    # http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+    expires 1y;
+    add_header Cache-Control public;
+
+    # Some browsers still send conditional-GET requests if there's a
+    # Last-Modified header or an ETag header even if they haven't
+    # reached the expiry date sent in the Expires header.
+    add_header Last-Modified "";
+    add_header ETag "";
+    break;
+  }
+}
