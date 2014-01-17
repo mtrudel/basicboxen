@@ -1,12 +1,12 @@
 server {
-  server_name <%= server_name %>;
+  server_name <%= host.hostname %>;
   listen 80 default;
 
   root <%= current_path %>/public;
-  try_files $uri @<%= application %>_app;
+  try_files $uri @<%= fetch(:application) %>_app;
 
-  location @<%= application %>_app {
-    proxy_pass         http://unix:<%= unicorn_socket %>;
+  location @<%= fetch(:application) %>_app {
+    proxy_pass         http://unix:<%= fetch(:unicorn_socket) %>;
 
     proxy_buffering     on;
     proxy_redirect      off;
