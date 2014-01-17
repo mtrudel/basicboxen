@@ -25,7 +25,8 @@ sure you have all the local gems and cookbooks installed:
     bundle exec berks install
 
 Next you'll want to edit (and probably commit) the `nodes/all_in_one.json` file
-and make the following changes:
+and make the following changes. The contents of this file will be used to build
+out external servers via knife solo commands.
 
 * **Line 11**: Specify the address that root's email is forwarded to
 * **Line 18**: Add your ssh public key (ie: the contents of your `~/.ssh/id_[dr]sa.pub` file)
@@ -198,14 +199,28 @@ repository. A couple of things to be aware of:
   boxen, but moving more towards data bags is something you'll probably want to
   do (especially if you end up moving to Chef server)
 
-# Frequently Asked Questions:
+# Super Bonus Extra: Using Vagrant with basic boxen recipes
 
-* **What about [Vagrant](http://www.vagrantup.com/)?** I personally don't use
-  Vagrant, since my mental model of devops separates spinning up a box from
-  provisioning a box (and also because I am yet to be convinced that Vagrant
-  isn't more trouble than it's worth). Feel free to wire in Vagrant if you'd
-  like though -- since basic boxen is built on standard Chef recipes, it
-  shouldn't be too hard.
+Included in the basic boxen repo is a basic `Vagrantfile` suitable for use with
+the recipes included in basic boxen. The only substantive difference between
+Vagrant based builds and knife based builds is that the included `Vagrantfile`
+does not include the postgres role by default, and includes libsqlite3 headers
+instead. The main reason behind this is to enable easy deployment of rails apps
+using a default development `RAILS_ENV`. Changing this is simply a matter of
+changing the roles listed in the included `Vagrantfile`
+
+Note that you'll also want to add your account info in the Vagrantfile, as we
+did in the `nodes/all_in_one.json` file above. We veer slightly off from
+idiomatic Vagrant (if such a thing even exists) by creating our own `deploy` user
+to use in place of the default `vagrant` user.
+
+# Super Bonus Extra #2: Capistrano 3 deployment scripts
+
+Included in the `examples/` directory of this project is a set of Capistrano
+3 based deployment scripts, including a stage definition that works with the
+included `Vagrantfile`.
+
+# Frequently Asked Questions:
 
 * **How do I daemonize apps?** As per the Capistrano recipes discussed in the
   previous section, my preferred way to daemonize apps is to use
