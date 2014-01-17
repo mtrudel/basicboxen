@@ -2,6 +2,7 @@ name "baseline"
 description "Universal Server Baseline"
 
 run_list(
+  "recipe[apt]",
   "recipe[logrotate]",
   "recipe[ntp]",
   "recipe[openssh]",
