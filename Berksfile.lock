@@ -39,29 +39,38 @@
     "vim": {
       "locked_version": "1.0.2"
     },
+    "site-ruby": {
+      "path": "./site-cookbooks/site-ruby"
+    },
+    "site-user": {
+      "path": "./site-cookbooks/site-user"
+    },
+    "site-sqlite": {
+      "path": "./site-cookbooks/site-sqlite"
+    },
     "yum": {
-      "locked_version": "2.3.0"
+      "locked_version": "2.4.2"
     },
     "runit": {
-      "locked_version": "1.1.6"
+      "locked_version": "1.4.0"
     },
     "ohai": {
-      "locked_version": "1.1.10"
+      "locked_version": "1.1.12"
     },
     "iptables": {
       "locked_version": "0.12.0"
     },
     "openssl": {
-      "locked_version": "1.0.2"
-    },
-    "git": {
-      "locked_version": "2.5.2"
-    },
-    "dmg": {
       "locked_version": "1.1.0"
     },
+    "git": {
+      "locked_version": "2.7.0"
+    },
+    "dmg": {
+      "locked_version": "2.0.8"
+    },
     "windows": {
-      "locked_version": "1.10.0"
+      "locked_version": "1.11.0"
     },
     "chef_handler": {
       "locked_version": "1.1.4"
