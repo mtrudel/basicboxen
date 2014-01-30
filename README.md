@@ -68,7 +68,7 @@ Out of the box, basic boxen sets up your remote server to have:
 
 * A running nginx instance with no hosts defined (and thus not bound anywhere)
 * A domain socket only postgres server running, with 'peer' authentication
-* Ruby 1.9.3 running inside rbenv, with the bundler gem installed
+* Ruby 2.1.0 running inside rbenv, with the bundler gem installed
 * A user 'deploy' with passwordless sudo and public-key only auth using your
   public key
 * A postfix server running on localhost, with admin mail forwarded to your email
