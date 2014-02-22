@@ -6,4 +6,5 @@ run_list(
   "recipe[rbenv]",
   "recipe[rbenv::ruby_build]",
   "recipe[site-ruby::install_ruby]",
+  "recipe[site-libv8::install_libv8_dev]",
 )
