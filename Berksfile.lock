@@ -9,6 +9,9 @@
     "logrotate": {
       "locked_version": "1.2.2"
     },
+    "mongodb-10gen": {
+      "locked_version": "0.1.10"
+    },
     "nginx": {
       "locked_version": "1.7.0"
     },

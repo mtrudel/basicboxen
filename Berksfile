@@ -3,6 +3,7 @@ site :opscode
 cookbook 'apt'
 cookbook 'build-essential'
 cookbook 'logrotate'
+cookbook 'mongodb-10gen'
 cookbook 'nginx'
 cookbook 'ntp'
 cookbook 'openssh'
