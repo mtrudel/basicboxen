@@ -2,10 +2,10 @@
 lock '3.1.0'
 
 # Set this to a shorthand name for the application
-set :application, 'heck'
+set :application, 'example'
 
 # Set this to the remote git repo where your application's code is
-set :repo_url, 'git@github.com:mtrudel/heck-backend.git'
+set :repo_url, 'git@github.com:example/example.git'
 
 # Set this to where you want the project deployed
 set :deploy_to, "/home/deploy/#{fetch(:application)}"
