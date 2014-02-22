@@ -44,4 +44,5 @@ override_attributes(
     "password" => {
       "postgres" => "md500000000000000000000000000000000"
     }
-})
+  }
+)
