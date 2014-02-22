@@ -2,6 +2,8 @@ site :opscode
 
 cookbook 'apt'
 cookbook 'build-essential'
+cookbook 'elasticsearch'
+cookbook 'java'
 cookbook 'logrotate'
 cookbook 'mongodb-10gen'
 cookbook 'nginx'

@@ -1,6 +1,7 @@
 {
   "run_list": [
     "role[baseline]",
+    "role[elasticsearch]",
     "role[mongodb]",
     "role[proxy]",
     "role[ruby_app]",
