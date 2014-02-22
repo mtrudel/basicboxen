@@ -26,8 +26,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       }
     }
     chef.add_role("baseline")
-    chef.add_role("elasticsearch")
-    chef.add_role("mongodb")
     chef.add_role("proxy")
     chef.add_role("ruby_app")
     chef.add_role("libsqlite")

@@ -82,6 +82,17 @@ a deployment concern, and can be well handled within your deployment tool of
 choice (see below for a discussion of best practices with Capistrano based
 deployment to a basic boxen).
 
+This project also includes role definitions for mongodb and elasticsearch, though
+they're disabled by default. To enable them, add the `mongodb` and/or
+`elasticsearch` roles to `nodes/all_in_one.json` and `Vagrantfile` as needed.
+Defaults for both are very conservative and will likely require tweaking; see the
+relevant files in `roles/` for more information.
+
+*IMPORTANT*: The mongodb recipe included here doesn't restrict the daemon's IP
+binding, so your mongo connection will be open to the world. This is
+a limitation of the mongodb cookbook being used, and is going to be rectified
+shortly.
+
 ### What does this *not* get you (yet)
 
 This box is missing a few key pieces for production use. Most notably it does
