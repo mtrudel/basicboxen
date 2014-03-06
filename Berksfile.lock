@@ -15,8 +15,10 @@
     "logrotate": {
       "locked_version": "1.2.2"
     },
-    "mongodb-10gen": {
-      "locked_version": "0.1.10"
+    "mongodb": {
+      "locked_version": "0.15.0",
+      "git": "git://github.com/edelight/chef-mongodb.git",
+      "ref": "7c0ed1c7cfd7a5ef9926dcfaa1f49ebbe65b38f4"
     },
     "nginx": {
       "locked_version": "1.7.0"
