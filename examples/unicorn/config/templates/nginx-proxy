@@ -1,6 +1,6 @@
 server {
-  server_name <%= host.hostname %>;
-  listen 80 default;
+  server_name <%= fetch(:public_hostname) %>;
+  listen 80;
 
   root <%= current_path %>/public;
   try_files $uri @<%= fetch(:application) %>_app;
