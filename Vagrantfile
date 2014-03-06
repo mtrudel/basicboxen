@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         }
       ],
       "authorization" => {
-        "sudo" => { "users" => ["deploy"], "passwordless" => true }
+        "sudo" => { "users" => ["deploy", "vagrant"], "passwordless" => true }
       }
     }
     chef.add_role("baseline")
