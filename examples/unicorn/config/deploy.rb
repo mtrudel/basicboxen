@@ -89,9 +89,9 @@ namespace :nginx do
       proxy_file = ERB.new(File.read(File.join(File.dirname(__FILE__), "templates", "nginx-proxy"))).result(binding)
       upload! StringIO.new(proxy_file), "#{fetch(:tmp_dir)}/#{fetch(:application)}/nginx-config"
       as :root do
-        execute :mv, "#{fetch(:tmp_dir)}/#{fetch(:application)}/nginx-config", "/etc/nginx/sites-enabled/#{fetch(:application)}"
-        execute :chown, :'root:root', "/etc/nginx/sites-enabled/#{fetch(:application)}"
-        execute :chmod, :'644', "/etc/nginx/sites-enabled/#{fetch(:application)}"
+        execute :mv, "#{fetch(:tmp_dir)}/#{fetch(:application)}/nginx-config", "/etc/nginx/sites-enabled/#{fetch(:public_hostname)}"
+        execute :chown, :'root:root', "/etc/nginx/sites-enabled/#{fetch(:public_hostname)}"
+        execute :chmod, :'644', "/etc/nginx/sites-enabled/#{fetch(:public_hostname)}"
         execute :service, :nginx, :reload
       end
     end
