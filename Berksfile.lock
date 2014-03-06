@@ -57,6 +57,9 @@
     "site-sqlite": {
       "path": "./site-cookbooks/site-sqlite"
     },
+    "site-libv8": {
+      "path": "./site-cookbooks/site-libv8"
+    },
     "xml": {
       "locked_version": "1.2.0"
     },
