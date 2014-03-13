@@ -38,6 +38,9 @@
     "rbenv": {
       "locked_version": "1.4.2"
     },
+    "redisio": {
+      "locked_version": "1.7.1"
+    },
     "sudo": {
       "locked_version": "2.1.2"
     },
@@ -100,6 +103,9 @@
     },
     "chef_handler": {
       "locked_version": "1.1.4"
+    },
+    "ulimit": {
+      "locked_version": "0.3.2"
     }
   }
 }
