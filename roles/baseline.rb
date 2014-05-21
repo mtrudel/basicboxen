@@ -10,7 +10,7 @@ run_list(
   "recipe[postfix::aliases]",
   "recipe[site-user::users]",
   "recipe[sudo]",
-  "recipe[unattended_upgrades]",
+  "recipe[unattended-upgrades]",
   "recipe[vim]",
 )
 
@@ -21,4 +21,14 @@ override_attributes(
       "permit_root_login" => "no"
     }
   },
+  "unattended-upgrades" => {
+    "allowed_origins" => {
+      "security" => true,
+      "updates" => true,
+      "proposed" => false,
+      "backports" => false
+    },
+    "remove_unused_dependencies" => true,
+    "automatic_reboot" => true
+  }
 )
