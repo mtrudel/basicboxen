@@ -2,3 +2,4 @@ RACK_ENV=<%= fetch(:rails_env) %>
 UNICORN_WORKING_DIR=<%= release_path %>
 UNICORN_LISTEN=<%= fetch(:unicorn_socket) %>
 UNICORN_WORKERS=<%= fetch(:unicorn_workers) %>
+PATH=/bin:/usr/bin:/opt/rbenv/shims
