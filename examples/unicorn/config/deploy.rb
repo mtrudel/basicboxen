@@ -46,9 +46,7 @@ namespace :deploy do
     on roles(:app) do |host|
       within current_path do
         as :root do
-          # rbenv/shims isn't in root's path, so we need to explicitly path it
-          # since command maps are wonky within as() blocks
-          execute "#{fetch(:rbenv_custom_path)}/shims/bundle", :exec, :foreman, :export, :upstart, :'-f', 'Procfile', :'-a', fetch(:application), :'-d', current_path, :'-u', host.user, :'/etc/init'
+          execute :bundle, :exec, :foreman, :export, :upstart, :'-f', 'Procfile', :'-a', fetch(:application), :'-d', current_path, :'-u', host.user, :'/etc/init'
         end
       end
     end
