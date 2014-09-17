@@ -1,4 +1,4 @@
-site :opscode
+source 'https://supermarket.getchef.com'
 
 cookbook 'apt'
 cookbook 'build-essential'
@@ -7,7 +7,6 @@ cookbook 'java'
 cookbook 'logrotate'
 cookbook 'mongodb', git: 'git://github.com/edelight/chef-mongodb.git', tag: '0.15.0'
 cookbook 'nginx'
-cookbook 'ntp'
 cookbook 'openssh'
 cookbook 'postfix'
 cookbook 'postgresql'
