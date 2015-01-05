@@ -9,6 +9,7 @@ run_list(
   "recipe[postfix]",
   "recipe[postfix::aliases]",
   "recipe[site-user::users]",
+  "recipe[site-swap::swapon]",
   "recipe[sudo]",
   "recipe[unattended-upgrades]",
   "recipe[vim]",
