@@ -3,7 +3,10 @@ server {
   listen 80;
 
   root <%= current_path %>/public;
-  try_files $uri @<%= fetch(:application) %>_app;
+
+  location / {
+    try_files $uri @<%= fetch(:application) %>_app;
+  }
 
   location @<%= fetch(:application) %>_app {
     proxy_pass         http://unix:<%= fetch(:unicorn_socket) %>;
