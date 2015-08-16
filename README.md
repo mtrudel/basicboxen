@@ -1,14 +1,13 @@
 # Basic boxen
 
-I wrote basic boxen to give me a consistent baseline environment to deploy apps
-(mostly rails apps) to. I wanted an environment that was consistent across all my projects, yet
-flexible enough to handle whatever apps I could throw at it. Basic boxen does just
-that -- it's an opinionated set of chef cookbooks and default configs that gives
-you a great development environment, while laying the groundwork for
-sustainable growth into production. Using basic boxen in tandem with a simple
-[Capistrano](http://capify.org) based deployment (such as the
-examples provided herein) in your apps provides a wonderful and simple way to go
-from zero to running application with minimal hassle and no lock-in.
+Basic boxen is an opinionated set of chef cookbooks and default configs that
+gives you a great development environment, while laying the groundwork for
+sustainable growth into production.
+
+Using basic boxen in tandem with a simple [Capistrano](http://capify.org)- or
+[Mina](http://nadarei.co/mina/)-based deployment (such as the examples provided
+herein) in your apps provides a wonderful and simple way to go from zero to
+running application with minimal hassle and no lock-in.
 
 # Getting started
 
@@ -17,48 +16,51 @@ from zero to running application with minimal hassle and no lock-in.
 Before you can use basic boxen to build boxes, you have to tell it a little bit
 about yourself. To do this, first clone this repo to your local machine and make
 sure you have all the local gems and cookbooks installed:
-
+```
     git clone git@github.com:mtrudel/basicboxen.git
     cd basicboxen
     bundle install
     bundle exec knife solo init .
     bundle exec berks install
-
-Next you'll want to edit (and probably commit) the `nodes/all_in_one.json` file
-and make the following changes. The contents of this file will be used to build
-out external servers via knife solo commands.
-
-* **Line 11**: Specify the address that root's email is forwarded to
-* **Line 18**: Add your ssh public key (ie: the contents of your `~/.ssh/id_[dr]sa.pub` file)
-  into the `ssh_keys` array
-
-That's it! You're now ready to start making servers.
+```
+Next you'll want to create (and probably commit) your node files. You may find
+it helpful to copy the `nodes/all_in_one.json` file, then edit as necessary,
+e.g. to configure your desired user/s and companion ssh key/s. The contents of
+a node file will be used to build out external servers via knife solo commands.
 
 ## Making a box
 
-Now that you've made basic boxen your own, you can provision any number of boxes from this 
-recipe by running:
+Now that you've made basic boxen your own, you can provision any number of boxes
+from this recipe by running:
+```
+    bundle exec knife solo bootstrap user@host nodes/node_file.json
+```
 
-    bundle exec knife solo bootstrap user@host nodes/all_in_one.json
+For example:
+```
+    bundle exec knife solo bootstrap deploy@google.com nodes/all_in_one.json
+```
 
-In theory basic boxen can provision any remote box, even ones with packages already 
-installed and running. In practice however, it makes more sense to run basic boxen against 
-a newly installed remote machine. Ideally, basic boxen will be the first thing that's ever 
-run on the machine. Most VM containers will automatically install sshd, provide you initial
-login credentials, and set the hostname, so basic boxen takes those steps as
-a given (note that you'll want to substitute the name of this initial user in
-place of 'user' above)
+In theory basic boxen can provision any remote box, even ones with packages
+already  installed and running. In practice however, it makes more sense to run
+basic boxen against a newly installed remote machine; ideally, basic boxen will
+be the first thing that's ever  run on the machine.
+
+Most VM containers will automatically install sshd, provide you initial login
+credentials, and set the hostname, so basic boxen takes those steps as a given
+(note that you'll want to substitute the name of this initial user in place of
+'user' above)
 
 #### Sidenote: Running basic boxen on an already provisioned box
 
-Note that you only log in as your system's initial user the first time you run on the
-remote server. The initial run of chef will create a `deploy` user, set them up
-with passwordless sudo, and revoke root login via ssh, giving you a consistent
-environment with the `deploy` user as the standard method of login. Because of
-this, subsequent runs of knife should look like:
-
+Note that you only log in as your system's initial user the first time you run
+on the remote server. The initial run of chef will create a `deploy` user, set
+them up with passwordless sudo, and revoke root login via ssh, giving you a
+consistent environment with the `deploy` user as the standard method of login.
+Because of this, subsequent runs of knife should look like:
+```
     bundle exec knife solo bootstrap deploy@host nodes/all_in_one.json
-
+```
 Unless you're making changes to your basic boxen fork, you shouldn't ever need
 to run your configuration more than once (though it's totally safe to).
 
@@ -77,21 +79,21 @@ Out of the box, basic boxen sets up your remote server to have:
 
 This basic deployment has only SSH and NTP open to the world, and has a very
 small attack surface exposed on SSH (all access is public key only, and root
-login is disabled). Everything from here onwards is considered to be
-a deployment concern, and can be well handled within your deployment tool of
+login is disabled). Everything from here onwards is considered to be a
+deployment concern, and can be well handled within your deployment tool of
 choice (see below for a discussion of best practices with Capistrano based
 deployment to a basic boxen).
 
-This project also includes role definitions for mongodb and elasticsearch, though
-they're disabled by default. To enable them, add the `mongodb` and/or
-`elasticsearch` roles to `nodes/all_in_one.json` and `Vagrantfile` as needed.
-Defaults for both are very conservative and will likely require tweaking; see the
-relevant files in `roles/` for more information.
+This project also includes role definitions for mongodb, postgis, and
+elasticsearch, though they're disabled by default. To enable them, add the
+relevant role(s) to your node file(s) and `Vagrantfile` as needed. Defaults for
+both are very conservative and will likely require tweaking; see the relevant
+files in `roles/` for more information.
 
 *IMPORTANT*: The mongodb recipe included here doesn't restrict the daemon's IP
-binding, so your mongo connection will be open to the world. This is
-a limitation of the mongodb cookbook being used, and is going to be rectified
-shortly.
+binding, so your mongo connection will be open to the world. This is a
+limitation of the mongodb cookbook being used, and can be worked around.
+Contributions very welcome.
 
 ### What does this *not* get you (yet)
 
@@ -106,27 +108,30 @@ not have:
 * Any logical partitioning of services; everything is running on one machine
 
 However, since basic boxen is built using chef it's easy to grow from here when
-the time comes. Basic boxen is really meant to give you a basic starting point for 
-getting started with projects while not hemming you in by early bad decisions. 
-You can have a box up and running in a few minutes with basic boxen without
-knowing anything about chef, and spend the time to grow out a more mature
-production config on the same tooling when the time comes.
+the time comes. Basic boxen is really meant to give you a basic starting point
+for getting started with projects while not hemming you in by early bad
+decisions. You can have a box up and running in a few minutes with basic boxen
+without knowing anything about chef, and spend the time to grow out a more
+mature production config on the same tooling when the time comes.
 
 ### How I use basic boxen
 
 For reference, my personal workflow with basic boxen is this:
 
-1. Spin up a new [DigitalOcean](https://www.digitalocean.com/?refcode=4bae360cbe43) VM (most
-   of my projects fit into their smallest tier, at least in development). I use their Ubuntu 
-   12.04 LTS 64 bit image, and specify my public key as initial auth.
-2. From inside my personal fork of basic boxen, I run the exact steps 
-   I outlined in the Getting Started section above. My personal fork is unchaged from this one, 
-   with the exception of my having customized my credentials as specified above.
+1. Spin up a new
+   [DigitalOcean](https://www.digitalocean.com/?refcode=4bae360cbe43) VM (most
+   of my projects fit into their smallest tier, at least in development). I use
+   their Ubuntu  12.04 LTS 64 bit image, and specify my public key as initial
+   auth.
+2. From inside my personal fork of basic boxen, I run the exact steps I outlined
+   in the Getting Started section above. My personal fork is unchaged from this
+   one, with the exception of my having customized my credentials as specified
+   above.
 3. I then switch over to the app I wish to deploy, set up and configure
    Capistrano as described in the next section, and I'm off to the races.
 
-In most cases, I can go from freshly spun up box to running application in less than 5 minutes, 
-without ever having to manually ssh into the server. Nice.
+In most cases, I can go from freshly spun up box to running application in less
+than 5 minutes, without ever having to manually ssh into the server. Nice.
 
 # Deploying apps on a basic boxen
 
@@ -139,17 +144,18 @@ specific deployment needs of your particular app.
 
 Within the `examples/` directory of this project, you'll find examples of how to
 best use Capistrano to deploy several types of applications. It's important to
-note that you're able to use any tool you'd like to deploy; Capistrano is only used
-an example here. 
+note that you're able to use any tool you'd like to deploy; Capistrano is only
+used an example here.
 
 ## Opinionated deploys
 
 Although you're free to use any tool you'd like to deploy your apps
-to a basic boxen, it's best to keep in mind basic boxen's opinionated approach to
-responsiblities:
+to a basic boxen, it's best to keep in mind basic boxen's opinionated approach
+to responsiblities:
 
 * There are three stages to building a running server:
-  * getting a barebones server running (this is your VM provider / hardware team / cloud service's job)
+  * getting a barebones server running (this is your VM provider / hardware team
+    / cloud service's job)
   * *provisioning* a server (this is basic boxen's job)
   * *deploying* apps (this is your deployment tool's job)
 * Well defined interfaces between these stages is what makes dev-ops easy. In
@@ -163,13 +169,13 @@ responsiblities:
     a database server
   * Well defined and encapsulated mechanisms for apps to configure specific
     customizations of these daemons
-  * A well defined mechanism for apps to daemonize themselves as needed (ie: upstart,
-    inittab)
-  * A reliable application environment (ie: a current ruby)
+  * A well defined mechanism for apps to daemonize themselves as needed (i.e.
+    upstart, inittab)
+  * A reliable application environment (i.e. a current ruby)
   * System level concerns such as ssh access, outgoing mail servers, and time
     servers
-* Anything that is specific to a particular app (ie: that would not exist on the
-  server were it not for that app) is a deployment concern of that app. This
+* Anything that is specific to a particular app (i.e. that would not exist on
+  the server were it not for that app) is a deployment concern of that app. This
   includes things such as:
   * The code and data for the app itself
   * Database accounts for the app
@@ -222,8 +228,8 @@ changing the roles listed in the included `Vagrantfile`
 
 Note that you'll also want to add your account info in the Vagrantfile, as we
 did in the `nodes/all_in_one.json` file above. We veer slightly off from
-idiomatic Vagrant (if such a thing even exists) by creating our own `deploy` user
-to use in place of the default `vagrant` user.
+idiomatic Vagrant (if such a thing even exists) by creating our own `deploy`
+user to use in place of the default `vagrant` user.
 
 # Super Bonus Extra #2: Capistrano 3 deployment scripts
 
@@ -246,10 +252,14 @@ included `Vagrantfile`.
 
 Credit where credit is due:
 
-* Thanks to [Chef](http://www.opscode.com/chef/) and [knife-solo](http://matschaffer.github.io/knife-solo/) for making this all possible
-* Thanks to [Grant McInnes](https://github.com/gmcinnes) and [Crent](https://github.com/bjubinville) for a lot of guidance
-  and source material
+* Thanks to [Chef](http://www.opscode.com/chef/) and
+  [knife-solo](http://matschaffer.github.io/knife-solo/) for making this all
+  possible
+* Thanks to [Grant McInnes](https://github.com/gmcinnes) and
+  [Crent](https://github.com/bjubinville) for a lot of guidance and source
+  material
 
 # Contributing
 
-Contributions welcome! Fork this repo and submit a pull request (or just open up a ticket and I'll see what I can do).
+Contributions welcome! Fork this repo and submit a pull request (or just open up
+a ticket and I'll see what I can do).

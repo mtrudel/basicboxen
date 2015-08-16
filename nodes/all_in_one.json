@@ -15,7 +15,9 @@
   "users": [
     { "username": "deploy",
       "comment": "Deploy user",
-      "ssh_keys": ["ssh-dss AABBCCDDEEFF.....AABBCCDDEEFF optionalemail@example.com"]
+      "ssh_keys": [
+        "ssh-dss AABBCCDDEEFF.....AABBCCDDEEFF optionalemail@example.com"
+      ]
     }
   ],
 
