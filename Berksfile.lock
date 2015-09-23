@@ -27,6 +27,8 @@ DEPENDENCIES
     path: site-cookbooks/site-sqlite
   site-user
     path: site-cookbooks/site-user
+  site-wordpress
+    path: site-cookbooks/site-wordpress
   sudo
   swap
   unattended-upgrades
@@ -131,6 +133,8 @@ GRAPH
   site-sqlite (0.1.0)
   site-user (0.1.0)
     user (>= 0.3.0)
+  site-wordpress (0.1.0)
+    php (>= 1.0.0)
   smf (2.2.7)
     rbac (>= 1.0.1)
   sudo (2.7.1)
