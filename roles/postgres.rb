@@ -37,10 +37,16 @@ run_list(
 #
 override_attributes(
   "postgresql" => {
+    "assign_postgres_password" => false,
     "config" => {
-      "listen_addresses" => ''
+      "listen_addresses" => 'localhost'
     },
-    "pg_hba" => [],
+    "pg_hba" => [{
+      type: 'local',
+      db: 'all',
+      user: 'all',
+      method: 'trust'
+    }],
     "password" => {
       "postgres" => "md500000000000000000000000000000000"
     }
