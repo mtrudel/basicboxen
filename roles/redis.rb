@@ -2,7 +2,7 @@ name "redis"
 description "Redis Server"
 
 run_list(
-  "recipe[redisio::install]",
+  "recipe[redisio]",
   "recipe[redisio::enable]"
 )
 
